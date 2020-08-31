@@ -8,6 +8,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class ServerApp {
+    private static final int PORT = 8189;
     public static void main(String[] args) {
         //создание 2 пула потоков (менеджеры потоков)
         //bossGroup отвечает за подключающихся клиентов, достаточно одного потока
@@ -25,22 +26,23 @@ public class ServerApp {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            //обавление handler`а в конвеер(pipeline)
-                            //для каждого клиента будет свой конвеере (new MainHandler())
+                            //добавление handler`а в конвеер(pipeline)
+                            //для каждого клиента будет свой конвеер (new MainHandler())
                             socketChannel.pipeline().addLast(new MainHandler());
                         }
                     });
-            //Обыекты типа Future- это информация о выполняемой задаче. ChannelFuture - доступ к запущенному серверу
+            //Обыекты типа Future - это информация о выполняемой задаче. ChannelFuture - доступ к запущенному серверу
             //.sync() - старт сервера
-            ChannelFuture channelFuture = serverBootstrap.bind(8189 ).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(PORT
+            ).sync();
             //это блокирующая операция. пока сервер не остановится, дальше код не будет обрабатываться
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             e.printStackTrace();
             //после остановки сервера закрытие пулов потоков
         } finally {
-           bossGroup.shutdownGracefully();
-           workerGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
     }
 }

@@ -16,7 +16,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         //считать сообщение, присланное клиентом
         //в Netty о что приходит из сети и попадает в первый handler заворачивается в ByteBuf,то же и на выход
         ByteBuf buf = (ByteBuf) msg;
-        //пока в буфкрк есть байты
+        //пока в буфере есть байты
         while (buf.readableBytes() > 0) {
             System.out.print((char)buf.readByte());
         }
@@ -27,7 +27,6 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     //Если в процессе обработки посылки вылетает исключение
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        //распечатать эксептион
         cause.printStackTrace();
         //закрыть соединение
         ctx.close();
