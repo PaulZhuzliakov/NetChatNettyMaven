@@ -19,7 +19,9 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //при запуске клиента подключаемся к серверу. лучше сделать подключение из клиента, после нажатия кнопки в клиенте
-        netWork = new NetWork();
+        netWork = new NetWork((args -> {
+            mainArea.appendText((String) args[0]);
+        }));
     }
 
     public void sendMsgAction(ActionEvent actionEvent) {

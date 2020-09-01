@@ -1,7 +1,5 @@
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -11,15 +9,17 @@ import io.netty.handler.codec.string.StringEncoder;
 public class NetWork {
     //SocketChannel из netty пакета, не IO
     private SocketChannel channel;
+//    private Callback onMsgReceivedCallback;
 
     //можно вынести в отдельный конфигурационный файл
     private static final String HOST = "localhost";
-    private static final int PORT = 8189;
+    private static final int PORT = 8198;
 
-    //при создании объекта в паралельном потоке запустит клиент
-    public NetWork() {
+    //при создании объекта в паралельном потоке запустится клиент
+    public NetWork(Callback onMsgReceivedCallback) {
+//        this.onMsgReceivedCallback = onMsgReceivedCallback;
         //если не создать отдельный поток, то блокирующая операция future.channel().closeFuture().sync() заблокирует запуск всего интерфейса
-        new Thread(() -> {
+        Thread netThread = new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
                 Bootstrap bootstrap = new Bootstrap();
@@ -36,7 +36,7 @@ public class NetWork {
                                 //StringDecoder-входящий handler. StringEncoder - исходящий handler. Хэндлеры из коробки
                                 //когда в канал отправим строку(sendMessage(String str)), строка пролетит через StringEncoder
                                 //StringEncoder преобразует строку в ByteBuf
-                                socketChannel.pipeline().addLast(new StringDecoder(), new StringEncoder());
+                                socketChannel.pipeline().addLast(new StringDecoder(), new StringEncoder(), new ClientHandler(onMsgReceivedCallback));
                             }
                         });
                 ChannelFuture future = bootstrap.connect(HOST, PORT).sync();
@@ -48,7 +48,9 @@ public class NetWork {
             } finally {
                 workerGroup.shutdownGracefully();
             }
-        }).start();
+        });
+        netThread.setDaemon(true);
+        netThread.start();
     }
 
     public void sendMessage(String str) {

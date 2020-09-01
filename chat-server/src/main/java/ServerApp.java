@@ -6,9 +6,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 public class ServerApp {
-    private static final int PORT = 8189;
+    private static final int PORT = 8198;
     public static void main(String[] args) {
         //создание 2 пула потоков (менеджеры потоков)
         //bossGroup отвечает за подключающихся клиентов, достаточно одного потока
@@ -28,7 +30,8 @@ public class ServerApp {
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             //добавление handler`а в конвеер(pipeline)
                             //для каждого клиента будет свой конвеер (new MainHandler())
-                            socketChannel.pipeline().addLast(new MainHandler());
+                            //поставив new StringDecoder(), new StringEncoder() - мы уверены, что работаем только со строками
+                            socketChannel.pipeline().addLast(new StringDecoder(), new StringEncoder(), new MainHandler());
                         }
                     });
             //Обыекты типа Future - это информация о выполняемой задаче. ChannelFuture - доступ к запущенному серверу
