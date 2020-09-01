@@ -13,7 +13,7 @@ public class NetWork {
 
     //можно вынести в отдельный конфигурационный файл
     private static final String HOST = "localhost";
-    private static final int PORT = 8198;
+    private static final int PORT = 8189;
 
     //при создании объекта в паралельном потоке запустится клиент
     public NetWork(Callback onMsgReceivedCallback) {

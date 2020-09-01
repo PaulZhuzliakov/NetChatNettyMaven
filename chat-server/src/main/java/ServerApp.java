@@ -10,7 +10,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 public class ServerApp {
-    private static final int PORT = 8198;
+    private static final int PORT = 8189;
     public static void main(String[] args) {
         //создание 2 пула потоков (менеджеры потоков)
         //bossGroup отвечает за подключающихся клиентов, достаточно одного потока
