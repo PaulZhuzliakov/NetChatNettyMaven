@@ -1,3 +1,4 @@
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,5 +30,11 @@ public class Controller implements Initializable {
         msgField.clear();
         //перекидываем фокус, что бы пользователь снова мог писать сообщение в окне
         msgField.requestFocus();
+    }
+
+    public void exitAction(ActionEvent actionEvent) {
+        //перед выходом из программы надо остановить сеть
+        netWork.close();
+        Platform.exit();
     }
 }

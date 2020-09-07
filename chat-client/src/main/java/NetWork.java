@@ -7,9 +7,10 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 
 public class NetWork {
+
     //SocketChannel из netty пакета, не IO
     private SocketChannel channel;
-//    private Callback onMsgReceivedCallback;
+    private ChannelFuture closeFuture;
 
     //можно вынести в отдельный конфигурационный файл
     private static final String HOST = "localhost";
@@ -49,11 +50,15 @@ public class NetWork {
                 workerGroup.shutdownGracefully();
             }
         });
-        netThread.setDaemon(true);
+//        netThread.setDaemon(true);
         netThread.start();
     }
 
     public void sendMessage(String str) {
         channel.writeAndFlush(str);
+    }
+
+    public void close() {
+        channel.close();
     }
 }

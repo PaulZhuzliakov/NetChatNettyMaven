@@ -36,8 +36,7 @@ public class ServerApp {
                     });
             //Обыекты типа Future - это информация о выполняемой задаче. ChannelFuture - доступ к запущенному серверу
             //.sync() - старт сервера
-            ChannelFuture channelFuture = serverBootstrap.bind(PORT
-            ).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
             //это блокирующая операция. пока сервер не остановится, дальше код не будет обрабатываться
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
